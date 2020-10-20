@@ -15,9 +15,14 @@
         <div class="col-6">
             {{ form_start(registrationForm) }}
             {{ form_row(registrationForm.email) }}
+            {{ form_row(registrationForm.firstName) }}
+            {{ form_row(registrationForm.lastName) }}
             {{ form_row(registrationForm.plainPassword, {
                 label: 'Password'
             }) }}
+            {{ form_row(registrationForm.address.city) }}
+            {{ form_row(registrationForm.address.postalCode) }}
+            {{ form_row(registrationForm.address.address) }}
             <button type="submit" class="btn btn-block btn-primary">Register</button>
         </div>
     </div>
