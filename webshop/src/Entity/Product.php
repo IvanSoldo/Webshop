@@ -6,9 +6,12 @@ use App\Repository\ProductRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * @ORM\Entity(repositoryClass=ProductRepository::class)
+ * @Vich\Uploadable()
  */
 class Product
 {
@@ -26,23 +29,56 @@ class Product
 
     /**
      * @ORM\Column(type="float")
+     * @Assert\Type(type="float")
+     * @Assert\NotBlank()
      */
     private $price;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank()
      */
     private $description;
 
     /**
-     * @ORM\Column(type="blob")
+     * @ORM\Column(type="string", length=255)
      */
     private $picture;
+
+    /**
+     * @Vich\UploadableField(mapping="products", fileNameProperty="picture")
+     */
+    private $pictureFile;
 
     /**
      * @ORM\Column(type="boolean")
      */
     private $product_active;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $updatedAt;
+
+    /**
+     * @return mixed
+     */
+    public function getPictureFile()
+    {
+        return $this->pictureFile;
+    }
+
+    /**
+     * @param mixed $pictureFile
+     */
+    public function setPictureFile($pictureFile): void
+    {
+        $this->pictureFile = $pictureFile;
+
+        if (null !== $pictureFile) {
+            $this->updatedAt = new \Datetime();
+        }
+    }
 
     /**
      * @ORM\ManyToMany(targetEntity=Category::class, inversedBy="products")
@@ -58,6 +94,7 @@ class Product
     {
         $this->categories = new ArrayCollection();
         $this->orderProducts = new ArrayCollection();
+        $this->updatedAt = new \DateTime();
     }
 
     public function getId(): ?int
@@ -82,7 +119,7 @@ class Product
         return $this->price;
     }
 
-    public function setPrice(float $price): self
+    public function setPrice(?float $price): self
     {
         $this->price = $price;
 
@@ -94,7 +131,7 @@ class Product
         return $this->description;
     }
 
-    public function setDescription(string $description): self
+    public function setDescription(?string $description): self
     {
         $this->description = $description;
 
@@ -109,6 +146,9 @@ class Product
     public function setPicture($picture): self
     {
         $this->picture = $picture;
+        if ($picture) {
+            $this->updatedAt = new \DateTime();
+        }
 
         return $this;
     }
@@ -181,4 +221,5 @@ class Product
 
         return $this;
     }
+
 }
