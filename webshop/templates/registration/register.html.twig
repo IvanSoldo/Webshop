@@ -8,7 +8,11 @@
     {% endfor %}
 
     <div class="row justify-content-center">
-        <h3 class="h3 mb-3 font-weight-normal">Register</h3>
+        {% if is_granted('ROLE_ADMIN') %}
+            <h3 class="h3 mb-3 font-weight-normal">Add Admin</h3>
+        {% else %}
+            <h3 class="h3 mb-3 font-weight-normal">Register</h3>
+        {% endif %}
     </div>
 
     <div class="row justify-content-center">

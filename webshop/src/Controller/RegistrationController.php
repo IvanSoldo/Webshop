@@ -24,7 +24,7 @@ class RegistrationController extends AbstractController
      */
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, GuardAuthenticatorHandler $guardHandler, LoginFormAuthenticationAuthenticator $authenticator): Response
     {
-        if ($this->getUser()) {
+        if ($this->getUser() && !$this->isGranted('ROLE_ADMIN')) {
             return $this->redirectToRoute('home');
         }
 
@@ -40,6 +40,9 @@ class RegistrationController extends AbstractController
                     $form->get('plainPassword')->getData()
                 )
             );
+            if ($this->isGranted('ROLE_ADMIN')) {
+                $user->setRoles(['ROLE_ADMIN']);
+            }
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
