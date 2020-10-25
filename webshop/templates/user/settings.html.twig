@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello UserController!{% endblock %}
+
+{% block body %}
+    <div class="card card-body bg-light mt-5">
+        <h2 class="text-center">Settings</h2>
+        <p class="text-center">Account settings.</p>
+        <div class="list-group">
+            <a href="{{ path('changePassword') }}" class="list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">Change password</h5>
+                </div>
+                <p class="mb-1">Change your password.</p>
+            </a>
+            <a href="{{ path('changeAddress') }}" class="list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">Change address</h5>
+                </div>
+                <p class="mb-1">Change your address.</p>
+                <small class="text-muted"></small>
+            </a>
+        </div>
+    </div>
+{% endblock %}
