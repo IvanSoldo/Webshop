@@ -39,6 +39,7 @@ class ProductCrudController extends AbstractCrudController
             Field::new('name'),
             Field::new('price'),
             Field::new('description'),
+            Field::new('quantity'),
             BooleanField::new('product_active'),
             ImageField::new('pictureFile')->setFormType(VichImageType::class)->hideOnIndex(),
             ImageField::new('picture')->setBasePath('/images/products')->onlyOnIndex()

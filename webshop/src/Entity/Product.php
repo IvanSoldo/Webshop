@@ -90,6 +90,32 @@ class Product
      */
     private $orderProducts;
 
+    /**
+     * @return mixed
+     */
+    public function getQuantity()
+    {
+        return $this->quantity;
+    }
+
+    /**
+     * @param mixed $quantity
+     */
+    public function setQuantity($quantity): void
+    {
+        $this->quantity = $quantity;
+    }
+
+    /**
+     * @ORM\Column(type="integer")
+     * @Assert\Range(
+     *     min = 0,
+     *     max = 999,
+     * )
+     * @Assert\NotBlank
+     */
+    private $quantity;
+
     public function __construct()
     {
         $this->categories = new ArrayCollection();

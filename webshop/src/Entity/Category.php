@@ -31,6 +31,12 @@ class Category
      */
     private $products;
 
+    /**
+     * @ORM\Column(type="text")
+     * @Assert\NotBlank()
+     */
+    private $description;
+
     public function __construct()
     {
         $this->products = new ArrayCollection();
@@ -83,6 +89,18 @@ class Category
 
     public function __toString(){
         return $this->name;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(string $description): self
+    {
+        $this->description = $description;
+
+        return $this;
     }
 
 }
