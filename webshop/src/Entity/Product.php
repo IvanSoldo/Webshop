@@ -47,6 +47,8 @@ class Product
 
     /**
      * @Vich\UploadableField(mapping="products", fileNameProperty="picture")
+     * @Assert\File(maxSize="100k", mimeTypes = {"image/jpeg", "image/png", "image/jpg"}, mimeTypesMessage="Please upload valid Image.")
+     * @Assert\NotBlank()
      */
     private $pictureFile;
 
@@ -169,7 +171,7 @@ class Product
         return $this->picture;
     }
 
-    public function setPicture($picture): self
+    public function setPicture(?string $picture): self
     {
         $this->picture = $picture;
         if ($picture) {
