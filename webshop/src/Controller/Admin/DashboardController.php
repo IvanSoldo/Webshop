@@ -56,7 +56,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Orders', 'fas fa-truck-moving', Order::class);
         yield MenuItem::linktoRoute('Add Admin', 'fas fa-users', 'app_register');
         yield MenuItem::linktoRoute('Account Settings', 'fas fa-user-cog', 'user_settings');
-        yield MenuItem::linktoRoute('Back To Store', 'fas fa-chevron-circle-left', 'home');
+        yield MenuItem::linktoRoute('Back To Store', 'fas fa-chevron-circle-left', 'home'); //TODO: LinkToUrl (polaznik21/home)
 
     }
 

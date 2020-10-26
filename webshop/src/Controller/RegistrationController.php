@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Cart;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Security\LoginFormAuthenticationAuthenticator;
@@ -44,7 +45,10 @@ class RegistrationController extends AbstractController
                 $user->setRoles(['ROLE_ADMIN']);
             }
 
+            $cart = new Cart();
+            $cart->setUser($user);
             $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($cart);
             $entityManager->persist($user);
             $entityManager->flush();
             // do anything else you need here, like send an email

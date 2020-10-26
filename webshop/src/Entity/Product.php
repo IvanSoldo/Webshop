@@ -84,6 +84,7 @@ class Product
 
     /**
      * @ORM\ManyToMany(targetEntity=Category::class, inversedBy="products")
+     * @Assert\Count(min="1")
      */
     private $categories;
 
