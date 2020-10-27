@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <div class="col-md-6 mx-auto">
+        <div class="card card-body bg-light mt-5">
+            <div class="text-center">
+                <h2 class="text-center">{{ category.name }}</h2>
+                <p class="text-center">{{ category.description|raw }}</p>
+                <div class="col text-center">
+                    <a href="{{ path('home') }}" class="btn btn-light btn-block">Back to Homepage</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container my-5">
+        <div class="row">
+            {% for product in products %}
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100">
+                        <a href="{{ path('product_details', {id: product.id}) }}"><img class="card-img-top"
+                                                                                       src="{{ vich_uploader_asset(product, 'pictureFile') }}"
+                                                                                       alt=""></a>
+                        <div class="card-body">
+                            <h4 class="card-title">
+                                <a href="{{ path('product_details', {id: product.id}) }}">{{ product.name }}</a>
+                            </h4>
+                            <h5>${{ product.price }}</h5>
+                            <p class="card-text">Product description:</p>
+                            <p class="card-text">Product Id: {{ product.id }} </p>
+                            <p class="card-text">{{ product.description }}</p>
+                            <p class="card-text">Available: {{ product.quantity }}</p>
+                            {% if app.user %}
+                                <div class="col text-center">
+                                    <a href="{{ path('cart_add', {id: product.id}) }}" class="btn btn-outline-success">Add
+                                        to Cart</a>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,78 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% set totalPrice = 0 %}
+
+    <div class="container mt-5">
+        <table id="cart" class="table table-responsive">
+            <thead>
+            <tr class="names">
+                <th style="width:50%">Product</th>
+                <th style="width:15%" class="text-right hidden-xs">Price</th>
+                <th style="width:15%" class="text-right">Quantity</th>
+                <th style="width:15%" class="text-right">Amount</th>
+                <th style="width:5%"></th>
+            </tr>
+            </thead>
+            {% for product in products %}
+                <tbody>
+                <tr class="item">
+                    <td data-th="Product">
+                        <div class="row">
+                            <div class="col-sm-9">
+                                <h6 class="nomargin">{{ product.product.name }}</h6>
+                                <p>{{ product.product.description }}</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td data-th="Price" class="text-right hidden-xs">${{ product.product.price }}</td>
+                    <td data-th="Quantity" class="text-right">
+                        <div class="form-group">
+                            <div>
+                                <p>{{ product.quantity }}</p>
+                                <div class="m-md-1">
+                                <a href="{{ path('cart_item_add', {id: product.product.id}) }}"
+                                       class="btn btn-outline-success">+</a>
+                                    <a href="{{ path('cart_item_remove', {id: product.product.id}) }}"
+                                       class="btn btn-outline-danger">-</a>
+                                </div>
+                                <div class="m-md-1">
+                                    <a href="{{ path('cart_item_delete', {id: product.product.id}) }}"
+                                       class="btn btn-outline-dark">Delete Item</a>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    {% set itemPrice = 0 %}
+                    {% set itemPrice = itemPrice + (product.quantity * product.product.price) %}
+                    {% set totalPrice = totalPrice + itemPrice %}
+                    <td data-th="Subtotal" class="text-right">${{ itemPrice }}</td>
+                </tr>
+                </tbody>
+            {% endfor %}
+            <tfoot>
+            <tr>
+                <td></td>
+                <td class="hidden-xs" colspan="1"></td>
+                <td class="text-right">Total</td>
+                <td class="text-right"><strong>${{ totalPrice }}</strong></td>
+                <td></td>
+            </tr>
+            <tr class="no-border">
+                <td><a href="{{ path('home') }}" class="btn btn-light btn-block">Continue Shopping</a></td>
+                <td colspan="2" class="hidden-xs"></td>
+                <td></td>
+                <td colspan="2">
+                    <div class="col">
+                        {% if products|length > 0 %}
+                            <a href="{{ path('cart_checkout') }}"
+                               class="btn btn-outline-success">Checkout</a>
+                        {% endif %}
+                    </div>
+                </td>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+
+{% endblock %}
