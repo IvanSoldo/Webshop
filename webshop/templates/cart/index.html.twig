@@ -1,10 +1,10 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+    {% set totalPrice = 0 %}
 
     <div class="container mt-5">
-        <?php flash('register_success'); ?>
-        <form action="<?php echo URLROOT; ?>/User/shoppingCart" method="post">
+        <form action="" method="post">
             <table id="cart" class="table table-responsive">
                 <thead>
                 <tr class="names">
@@ -15,27 +15,26 @@
                     <th style="width:5%"></th>
                 </tr>
                 </thead>
-                <?php foreach ($_SESSION['cart'] as $product): ?>
+                {% for product in products %}
                 <tbody>
                 <tr class="item">
                     <td data-th="Product">
                         <div class="row">
                             <div class="col-sm-9">
-                                <h6 class="nomargin"><?= e(unserialize($product)->product_name) ?></h6>
-                                <p><?= e(unserialize($product)->product_description) ?></p>
+                                <h6 class="nomargin">{{ product.product.name }}</h6>
+                                <p>{{ product.product.description }}</p>
                             </div>
                         </div>
                     </td>
-                    <td data-th="Price" class="text-right hidden-xs">
-                        $<?= e(unserialize($product)->product_price) ?></td>
+                    <td data-th="Price" class="text-right hidden-xs">${{ product.product.price }}</td>
                     <td data-th="Quantity" class="text-right">
-                        <form action="<?php echo URLROOT; ?>/User/shoppingCart" method="post">
+                        <form action="" method="post">
                             <div class="form-group">
                                 <div>
-                                    <input type="number" min="1" max="999" class="form-control" name="quantity" value="<?=e(unserialize($product)->quantity) ?>">
-                                    <input type="hidden" class="form-control" name="id" value="<?= e(unserialize($product)->id) ?>">
+                                    <input type="number" min="1" max="999" class="form-control" name="quantity" value="{{ product.quantity }}">
+                                    <input type="hidden" class="form-control" name="id" value="{{ product.product.id }}">
                                     <div class="m-md-1">
-                                        <input type="submit" name="changeQuantity" value="Change Quantity" class="btn btn-outline-success">
+                                        <input type="submit" name="changeQuantity" value="Change Quantity" class="btn btn-outline-success" >
                                     </div>
                                     <div class="m-md-1">
                                         <input type="submit" name="deleteFromCart" value="Delete from Cart" class="btn btn-outline-danger">
@@ -43,20 +42,20 @@
                                 </div>
                             </div>
                         </form>
-
                     </td>
-                    <td data-th="Subtotal" class="text-right">
-                        $<?= e(unserialize($product)->product_price) * e(unserialize($product)->quantity) ?></td>
-                    <?php $data['totalPrice'] += unserialize($product)->product_price * unserialize($product)->quantity ?>
+                    {% set itemPrice = 0 %}
+                    {% set itemPrice = itemPrice + (product.quantity * product.product.price) %}
+                    {% set totalPrice = totalPrice + itemPrice %}
+                    <td data-th="Subtotal" class="text-right">${{ itemPrice }}</td>
                 </tr>
                 </tbody>
-                <?php endforeach; ?>
+                {% endfor %}
                 <tfoot>
                 <tr>
                     <td></td>
                     <td class="hidden-xs" colspan="1"></td>
                     <td class="text-right">Total</td>
-                    <td class="text-right"><strong>$<?= e($data['totalPrice']) ?></strong></td>
+                    <td class="text-right"><strong>${{ totalPrice }}</strong></td>
                     <td></td>
                 </tr>
                 <tr class="no-border">
@@ -65,9 +64,9 @@
                     <td></td>
                     <td colspan="2">
                         <div class="col">
-                            <?php if(!empty($_SESSION['cart'])) : ?>
+                            {% if products|length > 0 %}
                             <a href="<?php echo URLROOT; ?>/User/checkout" class="btn btn-outline-success">Checkout</a>
-                            <?php endif; ?>
+                            {% endif %}
                         </div>
                     </td>
                 </tr>

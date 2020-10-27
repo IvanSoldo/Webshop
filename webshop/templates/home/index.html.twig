@@ -54,7 +54,7 @@
                                 <p class="card-text">{{ product.description }}</p>
                                 {% if app.user %}
                                     <div class="col text-center">
-                                        <a href="" class="btn btn-outline-success">Add to Cart</a>
+                                        <a href="{{ path('cart_add', {id: product.id}) }}" class="btn btn-outline-success">Add To Cart </a>
                                     </div>
                                 {% endif %}
                             </div>
