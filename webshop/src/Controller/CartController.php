@@ -69,6 +69,7 @@ class CartController extends AbstractController
      * @param Request $request
      * @param ProductRepository $productRepository
      * @param CartProductRepository $cartProductRepository
+     * @return RedirectResponse
      */
     public function incrementQuantity(Request $request, ProductRepository $productRepository, CartProductRepository $cartProductRepository)
     {
@@ -96,6 +97,7 @@ class CartController extends AbstractController
      * @param Request $request
      * @param ProductRepository $productRepository
      * @param CartProductRepository $cartProductRepository
+     * @return RedirectResponse
      */
     public function decrementQuantity(Request $request, ProductRepository $productRepository, CartProductRepository $cartProductRepository)
     {
@@ -121,6 +123,7 @@ class CartController extends AbstractController
      * @param Request $request
      * @param ProductRepository $productRepository
      * @param CartProductRepository $cartProductRepository
+     * @return RedirectResponse
      */
     public function deleteFromCart(Request $request, ProductRepository $productRepository, CartProductRepository $cartProductRepository)
     {
@@ -136,6 +139,7 @@ class CartController extends AbstractController
             $this->addFlash('danger', 'Item removed from cart!');
             return $this->redirectToRoute('cart');
         }
+        return $this->redirectToRoute('cart');
     }
 
     /**

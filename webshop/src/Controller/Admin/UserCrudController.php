@@ -30,7 +30,9 @@ class UserCrudController extends AbstractCrudController
             TextField::new('email'),
             TextField::new('firstName'),
             TextField::new('lastName'),
-            ArrayField::new('roles'),
+            ArrayField::new('roles')->formatValue(function ($value){
+                return $value = str_replace('ROLE_', '', $value);
+            }),
             AssociationField::new('address')->setRequired('true'),
         ];
     }
