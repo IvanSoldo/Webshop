@@ -7,7 +7,9 @@
 
             <h1 class="my-4">Webshop</h1>
             <div class="list-group">
-                <a href="#" class="list-group-item">Example Category </a>
+                {% for category in categories %}
+                <a href="{{ path('category_products', {id: category.id}) }}" class="list-group-item">{{ category.name }}</a>
+                {% endfor %}
             </div>
 
         </div>
@@ -52,6 +54,7 @@
                                 <h5>${{ product.price }}</h5>
                                 <p class="card-text">Id:{{ product.id }}</p>
                                 <p class="card-text">{{ product.description }}</p>
+                                <p class="card-text">Available: {{ product.quantity }}</p>
                                 {% if app.user %}
                                     <div class="col text-center">
                                         <a href="{{ path('cart_add', {id: product.id}) }}" class="btn btn-outline-success">Add To Cart </a>
