@@ -16,7 +16,11 @@
             <ul class="list-group mb-3">
                 {% for product in products %}
                     {% set itemPrice = 0 %}
-                    {% set itemPrice = itemPrice + (product.quantity * product.product.price) %}
+                    {% if product.product.onDiscount %}
+                        {% set itemPrice = itemPrice + (product.quantity * product.product.getDiscountedPrice) %}
+                    {% else %}
+                        {% set itemPrice = itemPrice + (product.quantity * product.product.price) %}
+                    {% endif %}
                     {% set totalPrice = totalPrice + itemPrice %}
                 <li class="list-group-item d-flex justify-content-between lh-condensed">
                     <div>

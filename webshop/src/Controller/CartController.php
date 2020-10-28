@@ -48,11 +48,6 @@ class CartController extends AbstractController
             'product' => $product
         ]);
         if ($cartItemExists) {
-            if ($product->getQuantity() < $cartItemExists->getQuantity() + 1) {
-                $this->addFlash('warning', 'Only ' . $product->getQuantity() . ' available!');
-                return $this->redirectToRoute('cart');
-            }
-
             $cartItemExists->setQuantity($cartItemExists->getQuantity() + 1);
             $entityManager->flush();
             $this->addFlash('success', 'Quantity changed!');
@@ -81,10 +76,6 @@ class CartController extends AbstractController
         ]);
         if ($cartItem) {
             $entityManager = $this->getDoctrine()->getManager();
-            if ($product->getQuantity() < $cartItem->getQuantity() + 1) {
-                $this->addFlash('warning', 'Only ' . $product->getQuantity() . ' available!');
-                return $this->redirectToRoute('cart');
-            }
             $cartItem->setQuantity($cartItem->getQuantity() + 1);
             $entityManager->flush();
             $this->addFlash('success', 'Quantity changed!');

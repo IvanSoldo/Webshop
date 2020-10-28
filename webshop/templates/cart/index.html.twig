@@ -25,7 +25,7 @@
                             </div>
                         </div>
                     </td>
-                    <td data-th="Price" class="text-right hidden-xs">${{ product.product.price }}</td>
+                    <td data-th="Price" class="text-right hidden-xs">${{ product.product.onDiscount ? product.product.getDiscountedPrice : product.product.price }}</td>
                     <td data-th="Quantity" class="text-right">
                         <div class="form-group">
                             <div>
@@ -44,7 +44,11 @@
                         </div>
                     </td>
                     {% set itemPrice = 0 %}
-                    {% set itemPrice = itemPrice + (product.quantity * product.product.price) %}
+                    {% if product.product.onDiscount %}
+                        {% set itemPrice = itemPrice + (product.quantity * product.product.getDiscountedPrice) %}
+                    {% else %}
+                        {% set itemPrice = itemPrice + (product.quantity * product.product.price) %}
+                    {% endif %}
                     {% set totalPrice = totalPrice + itemPrice %}
                     <td data-th="Subtotal" class="text-right">${{ itemPrice }}</td>
                 </tr>
