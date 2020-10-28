@@ -3,12 +3,14 @@
 namespace App\Controller;
 
 use App\Entity\CartProduct;
+use App\Form\AddressType;
 use App\Repository\CartProductRepository;
 use App\Repository\ProductRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -135,15 +137,23 @@ class CartController extends AbstractController
 
     /**
      * @Route("/cart/checkout", name="cart_checkout")
+     * @param Request $request
+     * @return RedirectResponse|Response
      */
-    public function checkoutController() {
+    public function checkoutController(Request $request) {
+
+        $form = $this->createForm(AddressType::class);
+        $form->handleRequest($request);
+
         $products = $this->getUser()->getCart()->getCartProducts();
+
         if (count($products) == 0) {
             return $this->redirectToRoute('home');
         }
         return $this->render('cart/checkout.html.twig', [
             'products' => $products,
             'user' => $this->getUser(),
+            'addressForm'=> $form->createView(),
         ]);
     }
 }

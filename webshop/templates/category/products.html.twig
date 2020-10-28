@@ -33,7 +33,6 @@
                                 <h5>${{ product.price }}</h5>
                             {% endif %}
                             <p class="card-text">{{ product.description }}</p>
-                            <p class="card-text">Available: {{ product.quantity }}</p>
                             {% if app.user %}
                                 <div class="col text-center">
                                     <a href="{{ path('cart_add', {id: product.id}) }}" class="btn btn-outline-success">Add

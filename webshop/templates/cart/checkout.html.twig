@@ -35,6 +35,10 @@
                     <strong>${{ totalPrice }}</strong>
                 </li>
             </ul>
+            <div class="text-center">
+                {{ form_start(addressForm) }}
+                <input type="submit" name="buy" value="Buy" class="btn btn-outline-success btn-lg btn-block">
+            </div>
         </div>
 
         <div class="col-md-8 order-md-1">
@@ -52,7 +56,14 @@
 
             <div class="mb-3">
                 <label for="address">Address</label>
-                <p class="font-weight-bold">{{ user.address }}</p>
+                <div class="row justify-content-left">
+                    <div class="col-6">
+                        {{ form_row(addressForm.city, {value: user.address.city}) }}
+                        {{ form_row(addressForm.postalCode, {value: user.address.postalCode}) }}
+                        {{ form_row(addressForm.address, {value: user.address.address}) }}
+                        {{ form_end(addressForm) }}
+                    </div>
+                </div>
             </div>
 
             <hr class="mb-4">
@@ -62,7 +73,6 @@
 
             <hr class="mb-4">
 
-            </form>
 
         </div>
     </div>
