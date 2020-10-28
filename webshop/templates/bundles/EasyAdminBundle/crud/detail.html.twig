@@ -3,7 +3,6 @@
 {% extends ea.templatePath('layout') %}
 
 {% trans_default_domain ea.i18n.translationDomain %}
-
 {% block body_id 'ea-detail-' ~ entity.name ~ '-' ~ entity.primaryKeyValue %}
 {% block body_class 'ea-detail ea-detail-' ~ entity.name %}
 
@@ -13,7 +12,6 @@
         {{ ea.crud.customPageTitle is null ? default_title|raw : ea.crud.customPageTitle|trans(ea.i18n.translationParameters)|raw }}
     {%- endapply -%}
 {% endblock %}
-
 {% block page_actions %}
     {% for action in entity.actions %}
         {{ include(action.templatePath, { action: action }, with_context = false) }}
@@ -23,6 +21,7 @@
 {% block content_footer_wrapper '' %}
 
 {% block main %}
+    <div id="printarea">
     {% block detail_fields %}
         {% set row_number = 0 %}
         {% for field in entity.fields %}
@@ -61,10 +60,41 @@
     {% block delete_form %}
         {{ include('@EasyAdmin/crud/includes/_delete_form.html.twig', { entity_id: entity.primaryKeyValue }, with_context = false) }}
     {% endblock delete_form %}
+    </div>
+    <div class="text-center">
+        <button type="button" id='btn' class="btn btn-primary btn-lg" value='Print' >Print</button>
+    </div>
 {% endblock %}
+
+
 
 {% block body_javascript %}
     {{ parent() }}
+
+    <style>
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #printarea * {
+                visibility: visible;
+            }
+        }
+    </style>
+
+    <style type="text/css" media="print">
+        @media print
+        {
+            @page {
+                margin-top: 0;
+                margin-bottom: 0;
+            }
+            body  {
+                padding-top: 72px;
+                padding-bottom: 72px ;
+            }
+        }
+    </style>
 
     <script type="text/javascript">
         $(function() {
@@ -77,6 +107,13 @@
                         $('#delete-form').trigger('submit');
                     });
             });
+        });
+    </script>
+    <script>
+        $("#btn").click(function () {
+            //Hide all other elements other than printarea.
+            $("#printarea").show();
+            window.print();
         });
     </script>
 {% endblock %}
