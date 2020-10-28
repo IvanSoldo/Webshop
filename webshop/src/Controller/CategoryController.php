@@ -12,6 +12,7 @@ class CategoryController extends AbstractController
 {
     /**
      * @Route("/category/products/{id}", name="category_products")
+     * @param Request $request
      * @param CategoryRepository $categoryRepository
      * @return Response
      */
@@ -22,7 +23,7 @@ class CategoryController extends AbstractController
         if (!$category) {
             return $this->redirectToRoute('home');
         }
-        $products = $category->getProducts(); //TODO:querybuilder after status code update.
+        $products = $category->getProducts();
         return $this->render('category/products.html.twig', [
             'category' => $category,
             'products' => $products,

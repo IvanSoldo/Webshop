@@ -126,13 +126,12 @@ class Product
 
     /**
      * @ORM\Column(type="integer", nullable=true)
-     * @Assert\NotBlank
      * @Assert\Range(
-     *     min = 0,
+     *     min = 1,
      *     max = 60,
      * )
      */
-    private $discountPercentage;
+    private $discountPercentage = 1;
 
     public function __construct()
     {

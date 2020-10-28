@@ -18,7 +18,7 @@ class HomeController extends AbstractController
      */
     public function index(ProductRepository $productRepository, CategoryRepository $categoryRepository)
     {
-        $products = $productRepository->findBy([ //TODO: change after product status code update.
+        $products = $productRepository->findBy([
             'product_active' => 1,
         ]);
         $categories = $categoryRepository->findAll();

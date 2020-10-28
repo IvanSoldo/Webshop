@@ -20,7 +20,12 @@ class ProductController extends AbstractController
     public function index(Request $request, ProductRepository $productRepository)
     {
         $productId = $request->attributes->get('id');
-        $product = $productRepository->find($productId); //TODO: Change query after product status codes update.
+        $product = $productRepository->find($productId);
+
+        if ($product->getProductActive() == false) {
+            return $this->redirectToRoute('home');
+        }
+
         if ($product) {
             return $this->render('product/details.html.twig', [
                 'product' => $product,
