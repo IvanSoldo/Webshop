@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\CartProduct;
+use App\Entity\Order;
+use App\Entity\OrderProduct;
 use App\Form\AddressType;
 use App\Repository\CartProductRepository;
 use App\Repository\ProductRepository;
@@ -150,10 +152,49 @@ class CartController extends AbstractController
         if (count($products) == 0) {
             return $this->redirectToRoute('home');
         }
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->submitOrder($form, $products);
+            $this->emptyCart($products);
+            $this->addFlash('success', 'Order Submitted!');
+            return $this->redirectToRoute('home');
+        }
+
         return $this->render('cart/checkout.html.twig', [
             'products' => $products,
             'user' => $this->getUser(),
             'addressForm'=> $form->createView(),
         ]);
+    }
+
+    private function submitOrder($form, $products) {
+        $user = $this->getUser();
+        $order = new Order();
+        $order->setAddress($form->getData());
+        $order->setUser($user);
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($order);
+        $entityManager->flush();
+        foreach ($products as $product) {
+            $orderProduct = new OrderProduct();
+            $orderProduct->setProduct($product->getProduct());
+            $orderProduct->setQuantity($product->getQuantity());
+            $orderProduct->setOrders($order);
+            if ($product->getProduct()->getOnDiscount()) {
+                $orderProduct->setPriceOnOrderSubmit($product->getProduct()->getDiscountedPrice());
+            } else {
+                $orderProduct->setPriceOnOrderSubmit($product->getProduct()->getPrice());
+            }
+            $entityManager->persist($orderProduct);
+            $entityManager->flush();
+        }
+    }
+
+    private function emptyCart($products) {
+        $entityManager = $this->getDoctrine()->getManager();
+        foreach ($products as $product) {
+            $entityManager->remove($product);
+            $entityManager->flush();
+        }
     }
 }

@@ -34,6 +34,11 @@ class OrderProduct
      */
     private $quantity;
 
+    /**
+     * @ORM\Column(type="float")
+     */
+    private $priceOnOrderSubmit;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -74,4 +79,22 @@ class OrderProduct
 
         return $this;
     }
+
+    public function getPriceOnOrderSubmit(): ?float
+    {
+        return $this->priceOnOrderSubmit;
+    }
+
+    public function setPriceOnOrderSubmit(float $priceOnOrderSubmit): self
+    {
+        $this->priceOnOrderSubmit = $priceOnOrderSubmit;
+        return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->product->getName() . '(' . $this->getQuantity() . ')';
+    }
+
+
 }

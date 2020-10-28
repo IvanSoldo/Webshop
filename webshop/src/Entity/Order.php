@@ -35,6 +35,12 @@ class Order
      */
     private $orderProducts;
 
+    /**
+     * @ORM\OneToOne(targetEntity=Address::class, cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $address;
+
     public function __construct()
     {
         $this->orderProducts = new ArrayCollection();
@@ -99,5 +105,27 @@ class Order
         }
 
         return $this;
+    }
+
+    public function getAddress(): ?Address
+    {
+        return $this->address;
+    }
+
+    public function setAddress(Address $address): self
+    {
+        $this->address = $address;
+
+        return $this;
+    }
+
+    public function totalSum(){
+        $orderItems = $this->getOrderProducts();
+        $totalSum = 0;
+        foreach ($orderItems as $item) {
+            $totalSum += ($item->getPriceOnOrderSubmit()) * $item->getQuantity();
+        }
+
+        return $totalSum;
     }
 }
