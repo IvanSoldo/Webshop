@@ -22,7 +22,7 @@ class CategoryController extends AbstractController
         if (!$category) {
             return $this->redirectToRoute('home');
         }
-        $products = $category->getProducts();
+        $products = $category->getProducts(); //TODO:querybuilder after status code update.
         return $this->render('category/products.html.twig', [
             'category' => $category,
             'products' => $products,

@@ -18,7 +18,9 @@ class HomeController extends AbstractController
      */
     public function index(ProductRepository $productRepository, CategoryRepository $categoryRepository)
     {
-        $products = $productRepository->findAll();
+        $products = $productRepository->findBy([ //TODO: change after product status code update.
+            'product_active' => 1,
+        ]);
         $categories = $categoryRepository->findAll();
 
         return $this->render('home/index.html.twig', [
@@ -26,6 +28,7 @@ class HomeController extends AbstractController
             'categories' => $categories,
         ]);
     }
-
-
 }
+
+
+

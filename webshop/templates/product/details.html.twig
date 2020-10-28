@@ -14,7 +14,11 @@
                                      alt=""></a>
                     <div class="card-body text-center">
                         <h3 class="card-title">{{ product.name }}</h3>
-                        <h4>${{ product.price }}</h4>
+                        {% if product.onDiscount == true %}
+                            <h4 class="text-danger">${{ product.getDiscountedPrice }} - Save {{ product.discountPercentage }}%</h4>
+                        {% else %}
+                            <h4>${{ product.price }}</h4>
+                        {% endif %}
                         <p class="card-text">{{ product.description }}</p>
                         <br>
                         <span class="text-warning">&#9733; &#9733; &#9733; &#9733; &#9733;</span>
@@ -24,21 +28,6 @@
                     <a href="{{ path('home') }}" class="btn btn-light btn-block">Back to Shopping</a>
                     </div>
                 </div>
-
-                <div class="card card-outline-secondary my-4">
-                    <div class="card-header">
-                        Product Reviews
-                    </div>
-                    <div class="card-body">
-                        <p>Great product !!</p>
-                        <small class="text-muted">Posted by Anonymous on 10/2/20</small>
-                        <hr>
-                        <p>Unbelievable product for such a low price.</p>
-                        <small class="text-muted">Posted by Anonymous on 10/2/20</small>
-                        <hr>
-                    </div>
-                </div>
-
             </div>
 
         </div>

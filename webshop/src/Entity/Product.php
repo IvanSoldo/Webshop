@@ -119,6 +119,21 @@ class Product
      */
     private $quantity;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $onDiscount;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     * @Assert\NotBlank
+     * @Assert\Range(
+     *     min = 0,
+     *     max = 60,
+     * )
+     */
+    private $discountPercentage;
+
     public function __construct()
     {
         $this->categories = new ArrayCollection();
@@ -249,6 +264,35 @@ class Product
         }
 
         return $this;
+    }
+
+    public function getOnDiscount(): ?bool
+    {
+        return $this->onDiscount;
+    }
+
+    public function setOnDiscount(bool $onDiscount): self
+    {
+        $this->onDiscount = $onDiscount;
+
+        return $this;
+    }
+
+    public function getDiscountPercentage(): ?int
+    {
+        return $this->discountPercentage;
+    }
+
+    public function setDiscountPercentage(?int $discountPercentage): self
+    {
+        $this->discountPercentage = $discountPercentage;
+
+        return $this;
+    }
+
+    public function getDiscountedPrice()
+    {
+        return $this->price * ((100-$this->discountPercentage) / 100);
     }
 
 }

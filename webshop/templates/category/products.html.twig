@@ -26,9 +26,11 @@
                             <h4 class="card-title">
                                 <a href="{{ path('product_details', {id: product.id}) }}">{{ product.name }}</a>
                             </h4>
-                            <h5>${{ product.price }}</h5>
-                            <p class="card-text">Product description:</p>
-                            <p class="card-text">Product Id: {{ product.id }} </p>
+                            {% if product.onDiscount == true %}
+                                <h5 class="text-danger">${{ product.getDiscountedPrice }} - Save {{ product.discountPercentage }}%</h5>
+                            {% else %}
+                                <h5>${{ product.price }}</h5>
+                            {% endif %}
                             <p class="card-text">{{ product.description }}</p>
                             <p class="card-text">Available: {{ product.quantity }}</p>
                             {% if app.user %}
