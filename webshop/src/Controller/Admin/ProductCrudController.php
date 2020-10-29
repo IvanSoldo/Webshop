@@ -3,7 +3,6 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Product;
-use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -11,10 +10,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\Field;
-use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Vich\UploaderBundle\Form\Type\VichImageType;
 
 class ProductCrudController extends AbstractCrudController
@@ -43,8 +39,8 @@ class ProductCrudController extends AbstractCrudController
             BooleanField::new('product_active'),
             BooleanField::new('onDiscount'),
             Field::new('discountPercentage'),
-            ImageField::new('pictureFile')->setFormType(VichImageType::class)->hideOnIndex(),
-            ImageField::new('picture')->setBasePath('/images/products')->onlyOnIndex()
+            Field::new('pictureFile')->setFormType(VichImageType::class)->onlyWhenCreating(),
+
         ];
 
         if ($pageName === Crud::PAGE_INDEX) {
