@@ -41,4 +41,17 @@ class ProductRepository extends ServiceEntityRepository
         $query = $queryBuilder->getQuery();
         return $query->execute();
     }
+
+    public function searchProductsByName($str)
+    {
+        return $this->getEntityManager()
+            ->createQuery(
+                'SELECT e
+                FROM App:Product e
+                WHERE e.name LIKE :str'
+            )
+            ->setParameter('str', '%'.$str.'%')
+            ->getResult();
+
+    }
 }

@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="row justify-content-center">
+        <div class="col-6">
+            {{ form_start(form) }}
+            {{ form_row(form.query) }}
+            <div class="text-center">
+                {{ form_row(form.search) }}
+            </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+
+    {% if products %}
+    <div class="container table-responsive py-5">
+        <table class="table table-bordered table-hover">
+            <thead class="thead-light">
+
+            <tr class="text-center">
+                <th scope="col">Name</th>
+                <th scope="col">Price</th>
+                <th scope="col">Description</th>
+            </tr>
+            {% for product in products %}
+            </thead>
+            <tbody>
+            <tr class="text-center">
+                <td><a href="{{ path('product_details', {id: product.id}) }}">{{ product.name }}</a></td>
+                <td>${{ product.onDiscount ? product.getDiscountedPrice : product.price }}</td>
+                <td>{{ product.description }}</td>
+            </tr>
+            {%  endfor  %}
+        </table>
+    </div>
+    {% endif %}
+{% endblock %}
