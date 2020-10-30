@@ -23,7 +23,11 @@ class ProductCrudController extends AbstractCrudController
     public function configureActions(Actions $actions): Actions
     {
         return $actions
-            ->disable(Action::DELETE);
+            ->disable(Action::DELETE)
+            ->add(Crud::PAGE_INDEX, Action::DETAIL)
+            ->update(Crud::PAGE_INDEX, Action::DETAIL, function (Action $action) {
+                return $action->setLabel('Details');
+            });
     }
 
     public function configureFields(string $pageName): iterable
@@ -39,8 +43,7 @@ class ProductCrudController extends AbstractCrudController
             BooleanField::new('product_active'),
             BooleanField::new('onDiscount'),
             Field::new('discountPercentage'),
-            Field::new('pictureFile')->setFormType(VichImageType::class)->onlyWhenCreating(),
-
+            Field::new('pictureFile')->setFormType(VichImageType::class)->onlyOnForms(),
         ];
 
         if ($pageName === Crud::PAGE_INDEX) {

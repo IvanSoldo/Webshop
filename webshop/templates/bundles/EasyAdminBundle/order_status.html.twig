@@ -10,7 +10,7 @@
                 <thead class="thead-light">
 
                 <tr class="text-center">
-                    <th scope="col">Ordered</th>
+                    <th scope="col">Ordered Products</th>
                     <th scope="col">Available</th>
                 </tr>
                 {% for item in order.orderproducts %}
@@ -20,14 +20,18 @@
                     <td>{{ item }}</td>
                     <td>{{ item.product.quantity }}</td>
                 </tr>
-                {%  endfor  %}
+                {% endfor %}
             </table>
         </div>
     </div>
     <div class="row justify-content-center">
         <div class="col-md-4 order-md-2 mb-4">
             {{ form_start(form) }}
-            {{ form_widget(form) }}
+            {{ form_widget(form.orderStatus) }}
+            <br>
+            <div class="row justify-content-center">
+                {{ form_row(form.concludeOrder) }}
+            </div>
             <br>
             <div class="container">
                 <div class="">

@@ -43,9 +43,14 @@ class Order
 
     /**
      * @ORM\ManyToOne(targetEntity=OrderStatus::class, inversedBy="orders")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $status;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isProcessed = 0;
 
     public function __construct()
     {
@@ -145,5 +150,21 @@ class Order
         $this->status = $status;
 
         return $this;
+    }
+
+    public function getIsProcessed(): ?bool
+    {
+        return $this->isProcessed;
+    }
+
+    public function setIsProcessed(bool $isProcessed): self
+    {
+        $this->isProcessed = $isProcessed;
+
+        return $this;
+    }
+
+    public function isProcessedToString() {
+        return $this->isProcessed ? 'Completed' : 'Pending';
     }
 }

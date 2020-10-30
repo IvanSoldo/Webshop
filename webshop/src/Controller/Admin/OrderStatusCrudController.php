@@ -3,6 +3,8 @@
 namespace App\Controller\Admin;
 
 use App\Entity\OrderStatus;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
 class OrderStatusCrudController extends AbstractCrudController
@@ -12,14 +14,9 @@ class OrderStatusCrudController extends AbstractCrudController
         return OrderStatus::class;
     }
 
-    /*
-    public function configureFields(string $pageName): iterable
+    public function configureActions(Actions $actions): Actions
     {
-        return [
-            IdField::new('id'),
-            TextField::new('title'),
-            TextEditorField::new('description'),
-        ];
+        return $actions
+            ->disable(Action::DELETE);
     }
-    */
 }

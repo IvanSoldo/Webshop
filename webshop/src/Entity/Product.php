@@ -6,11 +6,13 @@ use App\Repository\ProductRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * @ORM\Entity(repositoryClass=ProductRepository::class)
+ * @UniqueEntity(fields={"name"}, message="There is already a product with this name")
  * @Vich\Uploadable()
  */
 class Product
@@ -48,6 +50,7 @@ class Product
     /**
      * @Vich\UploadableField(mapping="products", fileNameProperty="picture")
      * @Assert\File(maxSize="100k", mimeTypes = {"image/jpeg", "image/png", "image/jpg"}, mimeTypesMessage="Please upload valid Image.")
+     * @Assert\NotBlank()
      */
     private $pictureFile;
 
