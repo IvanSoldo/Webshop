@@ -7,6 +7,7 @@ use App\Entity\Order;
 use App\Entity\OrderProduct;
 use App\Form\AddressType;
 use App\Repository\CartProductRepository;
+use App\Repository\OrderStatusRepository;
 use App\Repository\ProductRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -140,9 +141,10 @@ class CartController extends AbstractController
     /**
      * @Route("/cart/checkout", name="cart_checkout")
      * @param Request $request
+     * @param OrderStatusRepository $orderStatusRepository
      * @return RedirectResponse|Response
      */
-    public function checkoutController(Request $request) {
+    public function checkoutController(Request $request, OrderStatusRepository $orderStatusRepository) {
 
         $form = $this->createForm(AddressType::class);
         $form->handleRequest($request);
@@ -154,7 +156,7 @@ class CartController extends AbstractController
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->submitOrder($form, $products);
+            $this->submitOrder($form, $products, $orderStatusRepository);
             $this->emptyCart($products);
             $this->addFlash('success', 'Order Submitted!');
             return $this->redirectToRoute('home');
@@ -167,9 +169,11 @@ class CartController extends AbstractController
         ]);
     }
 
-    private function submitOrder($form, $products) {
+    private function submitOrder($form, $products,$orderStatusRepository) {
         $user = $this->getUser();
         $order = new Order();
+        $status = $orderStatusRepository->find(1);
+        $order->setStatus($status);
         $order->setAddress($form->getData());
         $order->setUser($user);
         $entityManager = $this->getDoctrine()->getManager();

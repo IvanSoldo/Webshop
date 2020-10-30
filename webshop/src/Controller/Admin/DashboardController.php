@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\Category;
 use App\Entity\Order;
+use App\Entity\OrderStatus;
 use App\Entity\Product;
 use App\Entity\User;
 use App\Repository\ProductRepository;
@@ -52,6 +53,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::section('Manage your Store');
         yield MenuItem::linkToCrud('Users', 'fa fa-user', User::class);
         yield MenuItem::linkToCrud('Categories', 'fas fa-list', Category::class);
+        yield MenuItem::linkToCrud('Users', 'fa fa-user', OrderStatus::class);
         yield MenuItem::linkToCrud('Product', 'fas fa-box', Product::class);
         yield MenuItem::linkToCrud('Orders', 'fas fa-truck-moving', Order::class);
         yield MenuItem::linktoRoute('Add Admin', 'fas fa-users', 'app_register');
