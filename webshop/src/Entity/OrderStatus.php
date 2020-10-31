@@ -31,6 +31,11 @@ class OrderStatus
      */
     private $orders;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isPredefined = 0;
+
     public function __construct()
     {
         $this->orders = new ArrayCollection();
@@ -87,5 +92,17 @@ class OrderStatus
     public function __toString()
     {
         return $this->getId() . ' - ' . $this->getName();
+    }
+
+    public function getIsPredefined(): ?bool
+    {
+        return $this->isPredefined;
+    }
+
+    public function setIsPredefined(bool $isPredefined): self
+    {
+        $this->isPredefined = $isPredefined;
+
+        return $this;
     }
 }

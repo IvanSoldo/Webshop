@@ -47,11 +47,6 @@ class Order
      */
     private $status;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
-    private $isProcessed = 0;
-
     public function __construct()
     {
         $this->orderProducts = new ArrayCollection();
@@ -150,21 +145,5 @@ class Order
         $this->status = $status;
 
         return $this;
-    }
-
-    public function getIsProcessed(): ?bool
-    {
-        return $this->isProcessed;
-    }
-
-    public function setIsProcessed(bool $isProcessed): self
-    {
-        $this->isProcessed = $isProcessed;
-
-        return $this;
-    }
-
-    public function isProcessedToString() {
-        return $this->isProcessed ? 'Completed' : 'Pending';
     }
 }

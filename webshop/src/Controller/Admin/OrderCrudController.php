@@ -24,7 +24,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class OrderCrudController extends AbstractCrudController
 {
-
     /**
      * @Route("/admin/getOrderStatus", name="order_status")
      * @param Request $request
@@ -35,20 +34,11 @@ class OrderCrudController extends AbstractCrudController
      */
     public function orderStatus(Request $request, OrderRepository $orderRepository, OrderStatusRepository $orderStatusRepository, ProductRepository $productRepository)
     {
-
         $id = $request->get('id');
-
         $order = $orderRepository->find($id);
-
         if (!$order) {
             return $this->redirectToRoute('admin');
         }
-
-        if ($order->getIsProcessed()) {
-            $this->addFlash('warning', 'Order already processed.');
-            return $this->redirectToRoute('admin');
-        }
-
         $form = $this->createFormBuilder()
             ->add('orderStatus', EntityType::class, array(
                 // query choices from this entity
@@ -58,34 +48,29 @@ class OrderCrudController extends AbstractCrudController
                 'multiple' => false,
                 'expanded' => false,
             ))
-            ->add('concludeOrder', CheckboxType::class, array(
-                'label' => 'Conclude Order',
-                'required' => false,
-                'value' => 0,
-            ))
             ->getForm();
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
-            $orderStatus = $orderStatusRepository->find($form->get('orderStatus')->getData());
-            $isProcessed = $form->get('concludeOrder')->getData();
 
-            if ($isProcessed) {
-                if (!$this->isProductInStock($order)) {
-                    $this->addFlash('warning', 'Insufficient quantity of products in stock. Restock your products.');
+            $orderStatus = $orderStatusRepository->find($form->get('orderStatus')->getData());
+            if ($orderStatus->getName() == 'Completed') {
+                if ($this->isProductInStock($order) == false) {
+                    $this->addFlash('warning', 'Insufficient quantity in stock. Restock your inventory.');
                     return $this->redirectToRoute('admin');
+                } else {
+                    $this->sell($order, $productRepository);
                 }
+
             }
+
             $order->setStatus($orderStatus);
-            $order->setIsProcessed($isProcessed);
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($order);
             $entityManager->flush();
-            $this->sell($order, $productRepository);
             $this->addFlash('success', 'Order Status updated!');
             return $this->redirectToRoute('admin');
         }
-
         $list = $orderStatusRepository->findAll();
         return $this->render('/bundles/EasyAdminBundle/order_status.html.twig', [
             'order' => $order,
@@ -95,8 +80,12 @@ class OrderCrudController extends AbstractCrudController
     }
 
     private function isOrderProcessFinished($order) {
-        return $order->getIsProcessed();
+        if ($order->getStatus()->getName() == 'Completed' || $order->getStatus()->getName() == 'Canceled') {
+            return true;
+        }
+        return false;
     }
+
 
     private function isProductInStock($order)
     {
@@ -107,7 +96,6 @@ class OrderCrudController extends AbstractCrudController
         }
         return true;
     }
-
     private function sell($order, $productRepository) {
         $entityManager = $this->getDoctrine()->getManager();
         foreach ($order->getOrderProducts() as $item) {
@@ -122,10 +110,8 @@ class OrderCrudController extends AbstractCrudController
     {
         return Order::class;
     }
-
     public function configureActions(Actions $actions): Actions
     {
-
         $orderStatus = Action::new('orderStatus', 'Process order', 'fa fa-file-invoice')
             ->displayIf(fn ($entity) => !$this->isOrderProcessFinished($entity))
             ->linkToRoute('order_status', function (Order $entity){
@@ -133,7 +119,6 @@ class OrderCrudController extends AbstractCrudController
                     'id' => $entity->getId()
                 ];
             });
-
         return $actions
             ->disable(Action::DELETE, Action::NEW, Action::EDIT)
             ->add(Crud::PAGE_INDEX, Action::DETAIL)
@@ -142,7 +127,6 @@ class OrderCrudController extends AbstractCrudController
                 return $action->setLabel('Details');
             });
     }
-
     public function configureFields(string $pageName): iterable
     {
         return [
@@ -155,7 +139,7 @@ class OrderCrudController extends AbstractCrudController
             NumberField::new('totalSum', 'Subtotal')->hideOnForm()->formatValue(function ($value){
                 return $value = '$' . strval($value);
             }),
-            TextField::new('isProcessedToString', 'Order Status')
+            TextField::new('status', 'Order Status')
         ];
     }
 }
