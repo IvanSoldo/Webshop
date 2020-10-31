@@ -6,6 +6,7 @@ use App\Entity\Address;
 use App\Form\AddressType;
 use App\Form\ChangePasswordFormType;
 use App\Repository\AddressRepository;
+use App\Repository\OrderRepository;
 use App\Repository\UserRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -75,8 +76,8 @@ class UserController extends AbstractController
             return $this->redirectToRoute('home');
 
         }
-        return $this->render('user/changePassword.html.twig', [
-            'changePasswordForm' => $form->createView(),
+        return $this->render('user/changeAddress.html.twig', [
+            'addressForm'=> $form->createView(),
         ]);
     }
 
@@ -109,6 +110,22 @@ class UserController extends AbstractController
 
         return $this->render('user/changeAddress.html.twig', [
             'addressForm'=> $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/user/orders", name="user_orders")
+     * @param OrderRepository $orderRepository
+     * @return Response
+     */
+    public function myOrders(OrderRepository $orderRepository)
+    {
+        $orders = $orderRepository->findBy([
+            'user' => $this->getUser(),
+        ]);
+
+        return $this->render('user/orders.html.twig', [
+            'orders' => $orders
         ]);
     }
 }

@@ -37,7 +37,6 @@ class ProductRepository extends ServiceEntityRepository
         $queryBuilder = $this->createQueryBuilder('p')
             ->where('p.product_active = TRUE')
             ->orderBy('p.id', 'desc');
-        ;
 
         $query = $queryBuilder->getQuery();
         return $query->setMaxResults(3)->execute();

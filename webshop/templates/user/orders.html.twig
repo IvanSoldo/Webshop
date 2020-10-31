@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% if orders %}
+        <div class="container table-responsive py-5">
+            <table class="table table-bordered table-hover">
+                <thead class="thead-light">
+                <tr class="text-center">
+                    <th scope="col">Created at</th>
+                    <th scope="col">Products</th>
+                    <th scope="col">Status</th>
+                </tr>
+                {% for order in orders %}
+                </thead>
+                <tbody>
+                <tr class="text-center">
+                    <td>{{ order.getOrderDate|date("d/m/Y") }}</td>
+                    <td>{% for product in  order.getOrderProducts %} {{ product.product.name}} ({{ product.quantity}}) {%  endfor  %}</td>
+                    <td>{{ order.status.name }}</td>
+                </tr>
+                {%  endfor  %}
+            </table>
+        </div>
+    {% else %}
+        <h4 class="text-center">No orders submitted!</h4>
+    {% endif %}
+
+{% endblock %}
