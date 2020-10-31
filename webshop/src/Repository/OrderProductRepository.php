@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\OrderProduct;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -19,32 +20,17 @@ class OrderProductRepository extends ServiceEntityRepository
         parent::__construct($registry, OrderProduct::class);
     }
 
-    // /**
-    //  * @return OrderProduct[] Returns an array of OrderProduct objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function totalEarned()
     {
-        return $this->createQueryBuilder('o')
-            ->andWhere('o.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('o.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        $queryBuilder = $this->createQueryBuilder('p');
 
-    /*
-    public function findOneBySomeField($value): ?OrderProduct
-    {
-        return $this->createQueryBuilder('o')
-            ->andWhere('o.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
+        $queryBuilder
+            ->innerJoin('App\Entity\Order', 'o', Join::WITH, 'o = p.orders')
+            ->select('SUM(p.priceOnOrderSubmit * p.quantity)')
+            ->where('o.status = 9')
         ;
+
+        return $queryBuilder->getQuery()->getSingleScalarResult();
     }
-    */
+
 }

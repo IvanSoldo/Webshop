@@ -32,6 +32,43 @@ class HomeController extends AbstractController
     }
 
     /**
+     * @Route("/sale", name="home_sale")
+     * @param ProductRepository $productRepository
+     * @param CategoryRepository $categoryRepository
+     * @return Response
+     */
+    public function sale(ProductRepository $productRepository, CategoryRepository $categoryRepository)
+    {
+        $products = $productRepository->findBy([
+            'product_active' => 1,
+            'onDiscount' =>1,
+        ]);
+        $categories = $categoryRepository->findAll();
+
+        return $this->render('home/index.html.twig', [
+            'products' => $products,
+            'categories' => $categories,
+        ]);
+    }
+
+    /**
+     * @Route("/new", name="home_new")
+     * @param ProductRepository $productRepository
+     * @param CategoryRepository $categoryRepository
+     * @return Response
+     */
+    public function new(ProductRepository $productRepository, CategoryRepository $categoryRepository)
+    {
+        $products = $productRepository->getNewProducts();
+        $categories = $categoryRepository->findAll();
+
+        return $this->render('home/index.html.twig', [
+            'products' => $products,
+            'categories' => $categories,
+        ]);
+    }
+
+    /**
      * @Route("/home/search", name="search")
      * @param Request $request
      * @param ProductRepository $productRepository

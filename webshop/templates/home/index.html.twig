@@ -6,10 +6,14 @@
         <div class="col-lg-3">
 
             <h1 class="my-4">Webshop</h1>
-            <div class="list-group">
-                {% for category in categories %}
-                <a href="{{ path('category_products', {id: category.id}) }}" class="list-group-item">{{ category.name }}</a>
-                {% endfor %}
+            <div class="card card-body bg-light">
+                <div class="list-group text-center">
+                    {% for category in categories %}
+                    <a href="{{ path('category_products', {id: category.id}) }}" class="list-group-item list-group-item-action list-group-item-light">
+                        <p class="mb-1">{{ category.name }}</p>
+                        {% endfor %}
+                    </a>
+                </div>
             </div>
 
         </div>
@@ -40,6 +44,19 @@
                     <span class="sr-only">Next</span>
                 </a>
             </div>
+            <div class="card card-body bg-light">
+                <div class="list-group text-center">
+                    <a href="{{ path('home_sale') }}" class="list-group-item list-group-item-action list-group-item-light">
+                        <p class="mb-1">Products on sale</p>
+                    </a>
+                    <a href="{{ path('home_new') }}" class="list-group-item list-group-item-action list-group-item-light">
+                        <p class="mb-1">Latest products</p>
+                        <small class="text-muted"></small>
+                    </a>
+                </div>
+            </div>
+
+            <br>
             <div class="row">
                 {% for product in products %}
                     <div class="col-lg-4 col-md-6 mb-4">

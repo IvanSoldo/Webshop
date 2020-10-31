@@ -34,6 +34,8 @@ class ProductCrudController extends AbstractCrudController
     {
         $displayCategories = ArrayField::new('categories');
         $formCategories = AssociationField::new('categories')->onlyOnForms();
+        $createProduct = Field::new('pictureFile')->setFormType(VichImageType::class)->onlyOnForms()->setRequired(true);
+        $editProduct =  Field::new('pictureFile')->setFormType(VichImageType::class)->onlyOnForms();
 
         $fields = [
             Field::new('name'),
@@ -43,13 +45,18 @@ class ProductCrudController extends AbstractCrudController
             BooleanField::new('product_active'),
             BooleanField::new('onDiscount'),
             Field::new('discountPercentage'),
-            Field::new('pictureFile')->setFormType(VichImageType::class)->onlyOnForms(),
         ];
 
         if ($pageName === Crud::PAGE_INDEX) {
             $fields[] = $displayCategories;
         } else {
             $fields[] = $formCategories;
+        }
+
+        if ($pageName === Crud::PAGE_NEW) {
+            $fields[] = $createProduct;
+        } else if ($pageName === Crud::PAGE_EDIT) {
+            $fields[] = $editProduct;
         }
 
         return $fields;

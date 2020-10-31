@@ -32,14 +32,15 @@ class ProductRepository extends ServiceEntityRepository
         return $queryBuilder->getQuery()->getOneOrNullResult();
     }
 
-    public function getDiscountedProducts()
+    public function getNewProducts()
     {
         $queryBuilder = $this->createQueryBuilder('p')
-            ->where('p.onDiscount = TRUE')
-            ->andWhere('p.product_active = TRUE');
+            ->where('p.product_active = TRUE')
+            ->orderBy('p.id', 'desc');
+        ;
 
         $query = $queryBuilder->getQuery();
-        return $query->execute();
+        return $query->setMaxResults(3)->execute();
     }
 
     public function searchProductsByName($str)

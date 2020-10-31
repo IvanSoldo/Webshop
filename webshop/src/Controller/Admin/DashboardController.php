@@ -7,6 +7,7 @@ use App\Entity\Order;
 use App\Entity\OrderStatus;
 use App\Entity\Product;
 use App\Entity\User;
+use App\Repository\OrderProductRepository;
 use App\Repository\ProductRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\NonUniqueResultException;
@@ -22,10 +23,12 @@ class DashboardController extends AbstractDashboardController
 {
     private $userRepository;
     private $productRepository;
-    public function __construct(UserRepository $userRepository, ProductRepository $productRepository)
+    private $orderProductRepository;
+    public function __construct(UserRepository $userRepository, ProductRepository $productRepository, OrderProductRepository $orderProductRepository)
     {
         $this->userRepository = $userRepository;
         $this->productRepository = $productRepository;
+        $this->orderProductRepository = $orderProductRepository;
     }
 
 
@@ -38,6 +41,7 @@ class DashboardController extends AbstractDashboardController
         return $this->render('bundles/EasyAdminBundle/welcome.html.twig', [
             'userCount' => $this->userRepository->countAllUsers() ,
             'productCount'=> $this->productRepository->countAllProducts(),
+            'totalEarned' => $this->orderProductRepository->totalEarned(),
         ]);
     }
 

@@ -50,7 +50,6 @@ class Product
     /**
      * @Vich\UploadableField(mapping="products", fileNameProperty="picture")
      * @Assert\File(maxSize="100k", mimeTypes = {"image/jpeg", "image/png", "image/jpg"}, mimeTypesMessage="Please upload valid Image.")
-     * @Assert\NotBlank()
      */
     private $pictureFile;
 
