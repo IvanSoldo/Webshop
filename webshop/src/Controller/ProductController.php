@@ -22,10 +22,6 @@ class ProductController extends AbstractController
         $productId = $request->attributes->get('id');
         $product = $productRepository->find($productId);
 
-        if ($product->getProductActive() == false) {
-            return $this->redirectToRoute('home');
-        }
-
         if ($product) {
             return $this->render('product/details.html.twig', [
                 'product' => $product,

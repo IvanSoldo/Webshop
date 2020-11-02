@@ -40,7 +40,6 @@ class OrderCrudController extends AbstractCrudController
         }
         $form = $this->createFormBuilder()
             ->add('orderStatus', EntityType::class, array(
-                // query choices from this entity
                 'class' => OrderStatus::class,
                 'label' => false,
                 'data' => $order->getStatus(),
@@ -60,7 +59,6 @@ class OrderCrudController extends AbstractCrudController
                 } else {
                     $this->sell($order, $productRepository);
                 }
-
             }
 
             $order->setStatus($orderStatus);

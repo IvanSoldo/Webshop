@@ -86,6 +86,7 @@ class CartController extends AbstractController
             $this->addFlash('success', 'Quantity changed!');
             return $this->redirectToRoute('cart');
         }
+        return $this->redirectToRoute('home');
     }
 
     /**
@@ -111,7 +112,7 @@ class CartController extends AbstractController
             $entityManager->flush();
             return $this->redirectToRoute('cart');
         }
-        return $this->redirectToRoute('cart');
+        return $this->redirectToRoute('home');
     }
 
     /**

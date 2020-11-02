@@ -76,8 +76,8 @@ class UserController extends AbstractController
             return $this->redirectToRoute('home');
 
         }
-        return $this->render('user/changeAddress.html.twig', [
-            'addressForm'=> $form->createView(),
+        return $this->render('user/changePassword.html.twig', [
+            'changePasswordForm'=> $form->createView(),
         ]);
     }
 

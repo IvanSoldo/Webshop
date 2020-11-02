@@ -58,7 +58,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Users', 'fa fa-user', User::class);
         yield MenuItem::linkToCrud('Categories', 'fas fa-list', Category::class);
         yield MenuItem::linkToCrud('Order Status', 'fas fa-exclamation', OrderStatus::class);
-        yield MenuItem::linkToCrud('Product', 'fas fa-box', Product::class);
+        yield MenuItem::linkToCrud('Products', 'fas fa-box', Product::class);
         yield MenuItem::linkToCrud('Orders', 'fas fa-truck-moving', Order::class);
         yield MenuItem::linktoRoute('Add Admin', 'fas fa-users', 'app_register');
         yield MenuItem::linktoRoute('Account Settings', 'fas fa-user-cog', 'user_settings');

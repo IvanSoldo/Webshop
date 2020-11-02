@@ -99,6 +99,9 @@
     "jms/metadata": {
         "version": "2.3.0"
     },
+    "konekt/pdf-invoice": {
+        "version": "1.6.0"
+    },
     "laminas/laminas-code": {
         "version": "3.4.1"
     },
@@ -164,6 +167,9 @@
         "files": [
             "config/packages/sensio_framework_extra.yaml"
         ]
+    },
+    "setasign/fpdf": {
+        "version": "1.8.2"
     },
     "symfony/apache-pack": {
         "version": "1.0",
