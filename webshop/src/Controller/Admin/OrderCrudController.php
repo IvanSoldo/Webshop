@@ -16,7 +16,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use Konekt\PdfInvoice\InvoicePrinter;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -76,6 +78,57 @@ class OrderCrudController extends AbstractCrudController
         ]);
     }
 
+    /**
+     * @Route("/admin/print_invoice",name="print_invoice")
+     * @param Request $request
+     * @param OrderRepository $orderRepository
+     * @param ProductRepository $productRepository
+     */
+    public function printInvoice(Request $request, OrderRepository $orderRepository, ProductRepository $productRepository)
+    {
+        $id = $request->get('id');
+        $order = $orderRepository->find($id);
+        if (!$order) {
+            return $this->redirectToRoute('admin');
+        }
+        $this->print($order, $productRepository);
+        return new Response(
+            Response::HTTP_OK
+        );
+    }
+
+    private function print($order, $productRepository)
+    {
+        $invoice = new InvoicePrinter();
+        $total = 0;
+        $invoice->setType("Sale Invoice");
+        $invoice->setReference($order->getId());
+        $invoice->setDate(date('       M dS ,Y',time()));
+        $invoice->setFrom(array("Webshop","Webshop","Vinkovacak 1","32100 Vinkovci"));
+        $invoice->setTo(array($order->getUser()->getName(),$order->getUser()->getEmail(),$order->getAddress()->getAddress(),$order->getAddress()->getPostalCode() . ' ' . $order->getAddress()->getCity()));
+        foreach ($order->getOrderProducts() as $item) {
+            $product = $productRepository->find($item->getProduct()->getId());
+            $invoice->addItem($product->getName(),$product->getDescription(),$item->getQuantity(),0,$item->getPriceOnOrderSubmit(),0,$item->getPriceOnOrderSubmit() * $item->getQuantity());
+            $total += $item->getPriceOnOrderSubmit() * $item->getQuantity();
+        }
+        $invoice->addTotal("Total",$total);
+        $invoice->addBadge("Payment on hand");
+        $invoice->addTitle("Important Notice");
+        $invoice->addParagraph("No item will be replaced or refunded if you don't have the invoice with you.");
+        $invoice->setFooternote("Webshop");
+        $invoice->render('Order'.$order->getId().'.pdf','D');
+    }
+
+    private function sell($order, $productRepository) {
+        $entityManager = $this->getDoctrine()->getManager();
+        foreach ($order->getOrderProducts() as $item) {
+            $product = $productRepository->find($item->getProduct()->getId());
+            $product->setQuantity($item->getProduct()->getQuantity() - $item->getQuantity());
+            $entityManager->persist($product);
+            $entityManager->flush();
+        }
+    }
+
     private function isOrderProcessFinished($order) {
         if ($order->getStatus()->getName() == 'Completed' || $order->getStatus()->getName() == 'Canceled') {
             return true;
@@ -83,6 +136,12 @@ class OrderCrudController extends AbstractCrudController
         return false;
     }
 
+    private function isOrderProcessComplete($order) {
+        if ($order->getStatus()->getName() == 'Completed') {
+            return true;
+        }
+        return false;
+    }
 
     private function isProductInStock($order)
     {
@@ -92,15 +151,6 @@ class OrderCrudController extends AbstractCrudController
             }
         }
         return true;
-    }
-    private function sell($order, $productRepository) {
-        $entityManager = $this->getDoctrine()->getManager();
-        foreach ($order->getOrderProducts() as $item) {
-            $product = $productRepository->find($item->getProduct()->getId());
-            $product->setQuantity($item->getProduct()->getQuantity() - $item->getQuantity());
-            $entityManager->persist($product);
-            $entityManager->flush();
-        }
     }
 
     public static function getEntityFqcn(): string
@@ -116,10 +166,20 @@ class OrderCrudController extends AbstractCrudController
                     'id' => $entity->getId()
                 ];
             });
+
+        $printInvoice = Action::new('printInvoice', 'Invoice', 'fa fa-print')
+            ->displayIf(fn ($entity) => $this->isOrderProcessComplete($entity))
+            ->linkToRoute('print_invoice', function (Order $entity){
+                return [
+                    'id' => $entity->getId()
+                ];
+            });
+
         return $actions
             ->disable(Action::DELETE, Action::NEW, Action::EDIT)
             ->add(Crud::PAGE_INDEX, Action::DETAIL)
             ->add(Crud::PAGE_INDEX, $orderStatus)
+            ->add(Crud::PAGE_INDEX, $printInvoice)
             ->update(Crud::PAGE_INDEX, Action::DETAIL, function (Action $action) {
                 return $action->setLabel('Details');
             });
