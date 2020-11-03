@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Form\SearchFormType;
 use App\Repository\CategoryRepository;
 use App\Repository\ProductRepository;
+use App\Repository\StoreSettingsRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,12 +13,22 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class HomeController extends AbstractController
 {
+    private $storeName;
+    private $date;
+
+    public function __construct(StoreSettingsRepository $settingsRepository)
+    {
+        $this->storeName = $settingsRepository ->getStoreName(1);
+        $this->date = $settingsRepository ->getNewProductDate(1);
+    }
+
     /**
      * @Route("/", name="home")
      * @param ProductRepository $productRepository
      * @param CategoryRepository $categoryRepository
      * @return Response
      */
+
     public function index(ProductRepository $productRepository, CategoryRepository $categoryRepository)
     {
         $products = $productRepository->findBy([
@@ -28,6 +39,7 @@ class HomeController extends AbstractController
         return $this->render('home/index.html.twig', [
             'products' => $products,
             'categories' => $categories,
+            'storeName' => $this->storeName,
         ]);
     }
 
@@ -48,6 +60,7 @@ class HomeController extends AbstractController
         return $this->render('home/index.html.twig', [
             'products' => $products,
             'categories' => $categories,
+            'storeName' => $this->storeName,
         ]);
     }
 
@@ -59,12 +72,13 @@ class HomeController extends AbstractController
      */
     public function new(ProductRepository $productRepository, CategoryRepository $categoryRepository)
     {
-        $products = $productRepository->getNewProducts();
+        $products = $productRepository->getNewProducts($this->date);
         $categories = $categoryRepository->findAll();
 
         return $this->render('home/index.html.twig', [
             'products' => $products,
             'categories' => $categories,
+            'storeName' => $this->storeName,
         ]);
     }
 

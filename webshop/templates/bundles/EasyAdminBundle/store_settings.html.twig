@@ -1,0 +1,54 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block page_title %} Dashboard {% endblock %}
+
+{% block content %}
+    <div class="content">
+        <div class="container">
+            <div class="row justify-content-center">
+                <h2> Store Settings </h2>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mx-auto">
+                    <div class="card card-body bg-light mt-5">
+                        <div class="text-center">
+                            <br>
+                            {{ form_start(form) }}
+                            <br>
+                            {{ form_label(form.storeName) }}
+                            {{ form_widget(form.storeName) }}
+                            <br>
+                            {{ form_label(form.email) }}
+                            {{ form_widget(form.email) }}
+                            <br>
+                            <div class="mx-auto">
+                                {{ form_label(form.newProductsDate) }}
+                                {{ form_widget(form.newProductsDate) }}
+                            </div>
+                            <br>
+                            {{ form_label(form.address.city) }}
+                            {{ form_widget(form.address.city) }}
+                            <br>
+                            {{ form_label(form.address.postalCode) }}
+                            {{ form_widget(form.address.postalCode) }}
+                            <br>
+                            {{ form_label(form.address.address) }}
+                            {{ form_widget(form.address.address) }}
+                            <br>
+                            <div class="container">
+                                <div class="">
+                                    <div class="text-center">
+                                        <button type="submit" name="update" value="update"
+                                                class="btn btn-block btn-primary">Update Settings
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            {{ form_end(form) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

@@ -51,7 +51,7 @@ class Address
         return $this->city;
     }
 
-    public function setCity(string $city): ?self
+    public function setCity(?string $city): ?self
     {
         $this->city = $city;
 
@@ -63,7 +63,7 @@ class Address
         return $this->postalCode;
     }
 
-    public function setPostalCode(int $postalCode): self
+    public function setPostalCode(?int $postalCode): self
     {
         $this->postalCode = $postalCode;
 
@@ -75,7 +75,7 @@ class Address
         return $this->address;
     }
 
-    public function setAddress(string $address): self
+    public function setAddress(?string $address): self
     {
         $this->address = $address;
 
@@ -91,7 +91,6 @@ class Address
     {
         $this->user = $user;
 
-        // set the owning side of the relation if necessary
         if ($user->getAddress() !== $this) {
             $user->setAddress($this);
         }

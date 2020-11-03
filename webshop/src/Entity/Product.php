@@ -26,6 +26,7 @@ class Product
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank()
      */
     private $name;
 
@@ -134,11 +135,17 @@ class Product
      */
     private $discountPercentage = 1;
 
+    /**
+     * @ORM\Column(type="date")
+     */
+    private $createdAt;
+
     public function __construct()
     {
         $this->categories = new ArrayCollection();
         $this->orderProducts = new ArrayCollection();
         $this->updatedAt = new \DateTime();
+        $this->createdAt = new \DateTime();
     }
 
     public function getId(): ?int
@@ -151,7 +158,7 @@ class Product
         return $this->name;
     }
 
-    public function setName(string $name): self
+    public function setName(?string $name): self
     {
         $this->name = $name;
 
@@ -293,6 +300,18 @@ class Product
     public function getDiscountedPrice()
     {
         return $this->price * ((100-$this->discountPercentage) / 100);
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
     }
 
 }

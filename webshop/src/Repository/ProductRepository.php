@@ -32,11 +32,13 @@ class ProductRepository extends ServiceEntityRepository
         return $queryBuilder->getQuery()->getOneOrNullResult();
     }
 
-    public function getNewProducts()
+    public function getNewProducts($date)
     {
         $queryBuilder = $this->createQueryBuilder('p')
             ->where('p.product_active = TRUE')
-            ->orderBy('p.id', 'desc');
+            ->andWhere('p.createdAt > :date')
+            ->setParameter('date', $date)
+            ->orderBy('p.id', 'DESC');
 
         $query = $queryBuilder->getQuery();
         return $query->setMaxResults(3)->execute();
@@ -52,6 +54,5 @@ class ProductRepository extends ServiceEntityRepository
             )
             ->setParameter('str', '%'.$str.'%')
             ->getResult();
-
     }
 }

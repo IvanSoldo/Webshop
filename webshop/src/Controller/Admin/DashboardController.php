@@ -60,6 +60,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Order Status', 'fas fa-exclamation', OrderStatus::class);
         yield MenuItem::linkToCrud('Products', 'fas fa-box', Product::class);
         yield MenuItem::linkToCrud('Orders', 'fas fa-truck-moving', Order::class);
+        yield MenuItem::linktoRoute('Store Settings', "fas fa-cogs", 'store_settings');
         yield MenuItem::linktoRoute('Add Admin', 'fas fa-users', 'app_register');
         yield MenuItem::linktoRoute('Account Settings', 'fas fa-user-cog', 'user_settings');
         yield MenuItem::linkToUrl('Back To Store', 'fas fa-chevron-circle-left', 'http://webshop.loc/index.php/'); //TODO: LinkToUrl (polaznik21/home)
