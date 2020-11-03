@@ -18,7 +18,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Konekt\PdfInvoice\InvoicePrinter;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -97,6 +96,29 @@ class OrderCrudController extends AbstractCrudController
         );
     }
 
+    /**
+     * @Route("/admin/cancelOrder", name="cancel_order")
+     * @param Request $request
+     * @param OrderRepository $orderRepository
+     * @param OrderStatusRepository $orderStatusRepository
+     * @return Response
+     */
+    public function cancelOrder(Request $request, OrderRepository $orderRepository, OrderStatusRepository $orderStatusRepository)
+    {
+        $id = $request->get('id');
+        $order = $orderRepository->find($id);
+        if (!$order) {
+            return $this->redirectToRoute('admin');
+        }
+        $orderStatus = $orderStatusRepository->findOneBy(['name'=>'Canceled']);
+        $order->setStatus($orderStatus);
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($order);
+        $entityManager->flush();
+        $this->addFlash('warning', 'Order canceled!');
+        return $this->redirectToRoute('admin');
+    }
+
     private function print($order, $productRepository)
     {
         $invoice = new InvoicePrinter();
@@ -142,6 +164,12 @@ class OrderCrudController extends AbstractCrudController
         }
         return false;
     }
+    private function isOrderProcessCanceled($order) {
+        if ($order->getStatus()->getName() == 'Canceled') {
+            return true;
+        }
+        return false;
+    }
 
     private function isProductInStock($order)
     {
@@ -159,7 +187,7 @@ class OrderCrudController extends AbstractCrudController
     }
     public function configureActions(Actions $actions): Actions
     {
-        $orderStatus = Action::new('orderStatus', 'Process order', 'fa fa-file-invoice')
+        $orderStatus = Action::new('orderStatus', 'Process', 'fa fa-file-invoice')
             ->displayIf(fn ($entity) => !$this->isOrderProcessFinished($entity))
             ->linkToRoute('order_status', function (Order $entity){
                 return [
@@ -175,11 +203,21 @@ class OrderCrudController extends AbstractCrudController
                 ];
             });
 
+        $cancelOrder = Action::new('cancelOrder', 'Cancel', 'far fa-window-close')
+            ->displayIf(fn ($entity) => !$this->isOrderProcessCanceled($entity))
+            ->linkToRoute('cancel_order', function (Order $entity){
+                return [
+                    'id' => $entity->getId()
+                ];
+            });
+
+
         return $actions
             ->disable(Action::DELETE, Action::NEW, Action::EDIT)
             ->add(Crud::PAGE_INDEX, Action::DETAIL)
             ->add(Crud::PAGE_INDEX, $orderStatus)
             ->add(Crud::PAGE_INDEX, $printInvoice)
+            ->add(Crud::PAGE_INDEX, $cancelOrder)
             ->update(Crud::PAGE_INDEX, Action::DETAIL, function (Action $action) {
                 return $action->setLabel('Details');
             });
