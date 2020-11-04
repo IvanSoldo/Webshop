@@ -10,6 +10,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\Field;
 use Vich\UploaderBundle\Form\Type\VichImageType;
 
@@ -45,6 +46,7 @@ class ProductCrudController extends AbstractCrudController
             BooleanField::new('product_active'),
             BooleanField::new('onDiscount'),
             Field::new('discountPercentage'),
+            DateTimeField::new('createdAt')->onlyOnDetail()
         ];
 
         if ($pageName === Crud::PAGE_INDEX) {

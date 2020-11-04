@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <div class="row">
+        <div class="col-md-6 mx-auto">
+            <div class="card card-body bg-light mt-5 text-center">
+                <h4>Contact Us</h4>
+                <br>
+                <i class="fas fa-map-marker-alt fa-lg"></i>
+                <br>
+                <p>Headquarters - {{ contact.address }}</p>
+                <br>
+                <i class="fas fa-envelope fa-lg"></i>
+                <br>
+                <p>{{ contact.email }}</p>
+                <br>
+                <i class="fas fa-store-alt fa-lg"></i>
+                <br>
+                <p>Stores:</p>
+
+                    <ul class="list-group">
+                        {% for shop in shopList %}
+                        <li class="list-group-item">{{ shop.address }} - {{ shop.email }}</li>
+                        {% endfor %}
+                    </ul>
+
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

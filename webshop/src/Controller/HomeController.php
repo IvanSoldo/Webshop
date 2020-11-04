@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Form\SearchFormType;
 use App\Repository\CategoryRepository;
 use App\Repository\ProductRepository;
+use App\Repository\ShopRepository;
 use App\Repository\StoreSettingsRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -40,6 +41,22 @@ class HomeController extends AbstractController
             'products' => $products,
             'categories' => $categories,
             'storeName' => $this->storeName,
+        ]);
+    }
+
+    /**
+     * @Route("/contact", name="contact")
+     * @param StoreSettingsRepository $settingsRepository
+     * @param ShopRepository $shopRepository
+     * @return Response
+     */
+    public function contact(StoreSettingsRepository $settingsRepository, ShopRepository $shopRepository)
+    {
+        $contactInfo = $settingsRepository->find(1);
+        $shopList = $shopRepository->findAll();
+        return $this->render('home/contact.html.twig', [
+            'contact' => $contactInfo,
+            'shopList' => $shopList,
         ]);
     }
 

@@ -7,6 +7,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
           integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+          integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
     <title>{% block title %}Webshop{% endblock %}</title>
     {% block stylesheets %}{% endblock %}
 </head>
@@ -26,13 +28,16 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{ path('search') }}">Search</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('contact') }}">Contact Us</a>
+                </li>
             </ul>
 
             <ul class="navbar-nav ml-auto">
                 {% if is_granted('ROLE_ADMIN') %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ path('admin') }}">Dashboard </a>
-                </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('admin') }}">Dashboard </a>
+                    </li>
                 {% endif %}
                 {% if not app.user %}
                     <li class="nav-item">
