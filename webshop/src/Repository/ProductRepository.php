@@ -41,7 +41,7 @@ class ProductRepository extends ServiceEntityRepository
             ->orderBy('p.id', 'DESC');
 
         $query = $queryBuilder->getQuery();
-        return $query->setMaxResults(3)->execute();
+        return $query->execute();
     }
 
     public function searchProductsByName($str)

@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Admin;
 
 use App\Entity\Cart;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
+use App\Form\StoreSettingsFormType;
+use App\Repository\StoreSettingsRepository;
 use App\Security\LoginFormAuthenticationAuthenticator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,10 +15,11 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
 
-class RegistrationController extends AbstractController
+
+class addAdminController extends AbstractController
 {
     /**
-     * @Route("/register", name="app_register")
+     * @Route("/admin/addAdmin", name="add_admin")
      * @param Request $request
      * @param UserPasswordEncoderInterface $passwordEncoder
      * @param GuardAuthenticatorHandler $guardHandler
@@ -25,22 +28,18 @@ class RegistrationController extends AbstractController
      */
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, GuardAuthenticatorHandler $guardHandler, LoginFormAuthenticationAuthenticator $authenticator): Response
     {
-        if ($this->getUser()) {
-            return $this->redirectToRoute('home');
-        }
-
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // encode the plain password
             $user->setPassword(
                 $passwordEncoder->encodePassword(
                     $user,
                     $form->get('plainPassword')->getData()
                 )
             );
+            $user->setRoles(['ROLE_ADMIN']);
 
             $cart = new Cart();
             $cart->setUser($user);
@@ -48,17 +47,12 @@ class RegistrationController extends AbstractController
             $entityManager->persist($cart);
             $entityManager->persist($user);
             $entityManager->flush();
-            // do anything else you need here, like send an email
+            $this->addFlash('success', 'New admin added.');
+            return $this->redirectToRoute('admin');
 
-            return $guardHandler->authenticateUserAndHandleSuccess(
-                $user,
-                $request,
-                $authenticator,
-                'main' // firewall name in security.yaml
-            );
         }
 
-        return $this->render('registration/register.html.twig', [
+        return $this->render('bundles/EasyAdminBundle/addAdmin.html.twig', [
             'registrationForm' => $form->createView(),
         ]);
     }

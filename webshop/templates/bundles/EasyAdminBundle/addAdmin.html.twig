@@ -1,18 +1,13 @@
-{% extends 'base.html.twig' %}
+{% extends '@EasyAdmin/page/content.html.twig' %}
 
-{% block title %}Register{% endblock %}
+{% block page_title %} Dashboard {% endblock %}
 
-{% block body %}
-    {% for flashError in app.flashes('verify_email_error') %}
-        <div class="alert alert-danger" role="alert">{{ flashError }}</div>
-    {% endfor %}
+{% block content %}
 
+    <div class="container table-responsive py-5">
     <div class="row justify-content-center">
-        <h3 class="h3 mb-3 font-weight-normal">Register</h3>
-    </div>
-
-    <div class="row justify-content-center">
-        <div class="col-6">
+    <div class="col-md-4 order-md-2 mb-4">
+        <div class="col text-center">
             {{ form_start(registrationForm) }}
             {{ form_row(registrationForm.email) }}
             {{ form_row(registrationForm.firstName) }}
@@ -23,10 +18,13 @@
             {{ form_row(registrationForm.address.city) }}
             {{ form_row(registrationForm.address.postalCode) }}
             {{ form_row(registrationForm.address.address) }}
-            <div class="col text-center">
-                <input type="submit" value="Register" class="btn btn-outline-success">
-            </div>
         </div>
-    </div>
+        <br>
+            <div class="col text-center">
+                <input type="submit" value="Add Admin" class="btn btn-outline-success">
+            </div>
     {{ form_end(registrationForm) }}
-{% endblock %}
+    </div>
+    </div>
+
+{% endblock content %}

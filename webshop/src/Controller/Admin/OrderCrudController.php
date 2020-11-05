@@ -7,6 +7,7 @@ use App\Entity\OrderStatus;
 use App\Repository\OrderRepository;
 use App\Repository\OrderStatusRepository;
 use App\Repository\ProductRepository;
+use App\Repository\StoreSettingsRepository;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -82,15 +83,17 @@ class OrderCrudController extends AbstractCrudController
      * @param Request $request
      * @param OrderRepository $orderRepository
      * @param ProductRepository $productRepository
+     * @param StoreSettingsRepository $settingsRepository
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
-    public function printInvoice(Request $request, OrderRepository $orderRepository, ProductRepository $productRepository)
+    public function printInvoice(Request $request, OrderRepository $orderRepository, ProductRepository $productRepository, StoreSettingsRepository $settingsRepository)
     {
         $id = $request->get('id');
         $order = $orderRepository->find($id);
         if (!$order) {
             return $this->redirectToRoute('admin');
         }
-        $this->print($order, $productRepository);
+        $this->print($order, $productRepository, $settingsRepository);
         return new Response(
             Response::HTTP_OK
         );
@@ -119,14 +122,15 @@ class OrderCrudController extends AbstractCrudController
         return $this->redirectToRoute('admin');
     }
 
-    private function print($order, $productRepository)
+    private function print($order, $productRepository, $settingsRepository)
     {
+        $storeInfo = $settingsRepository->find(1);
         $invoice = new InvoicePrinter();
         $total = 0;
         $invoice->setType("Sale Invoice");
         $invoice->setReference($order->getId());
         $invoice->setDate(date('       M dS ,Y',time()));
-        $invoice->setFrom(array("Webshop","Webshop","Vinkovacak 1","32100 Vinkovci"));
+        $invoice->setFrom(array($storeInfo->getStoreName(),$storeInfo->getStoreName(), $storeInfo->getAddress()->getAddress(),$storeInfo->getAddress()->getPostalCode() . ' ' .$storeInfo->getAddress()->getCity()));
         $invoice->setTo(array($order->getUser()->getName(),$order->getUser()->getEmail(),$order->getAddress()->getAddress(),$order->getAddress()->getPostalCode() . ' ' . $order->getAddress()->getCity()));
         foreach ($order->getOrderProducts() as $item) {
             $product = $productRepository->find($item->getProduct()->getId());

@@ -54,16 +54,20 @@ class DashboardController extends AbstractDashboardController
 
     public function configureMenuItems(): iterable
     {
-        yield MenuItem::linktoDashboard('Home', 'fa fa-home');
         yield MenuItem::section('Manage your Store');
-        yield MenuItem::linkToCrud('Users', 'fa fa-user', User::class);
-        yield MenuItem::linkToCrud('Categories', 'fas fa-list', Category::class);
-        yield MenuItem::linkToCrud('Order Status', 'fas fa-exclamation', OrderStatus::class);
+        yield MenuItem::linktoDashboard('Home', 'fa fa-home');
+        yield MenuItem::section('Products');
         yield MenuItem::linkToCrud('Products', 'fas fa-box', Product::class);
+        yield MenuItem::linkToCrud('Categories', 'fas fa-list', Category::class);
+        yield MenuItem::section('Orders');
         yield MenuItem::linkToCrud('Orders', 'fas fa-truck-moving', Order::class);
-        yield MenuItem::linkToCrud('Shops', 'fas fa-store-alt', Shop::class);
+        yield MenuItem::linkToCrud('Order Status', 'fas fa-exclamation', OrderStatus::class);
+        yield MenuItem::section('Store');
         yield MenuItem::linktoRoute('Store Settings', "fas fa-cogs", 'store_settings');
-        yield MenuItem::linktoRoute('Add Admin', 'fas fa-users', 'app_register');
+        yield MenuItem::linktoRoute('Add Admin', 'fas fa-users', 'add_admin');
+        yield MenuItem::linkToCrud('Shops', 'fas fa-store-alt', Shop::class);
+        yield MenuItem::linkToCrud('Users', 'fa fa-user', User::class);
+        yield MenuItem::section('Other');
         yield MenuItem::linktoRoute('Account Settings', 'fas fa-user-cog', 'user_settings');
         yield MenuItem::linkToUrl('Back To Store', 'fas fa-chevron-circle-left', 'http://webshop.loc/index.php/'); //TODO: LinkToUrl (polaznik21/home)
 

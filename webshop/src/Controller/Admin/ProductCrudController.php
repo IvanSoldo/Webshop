@@ -33,16 +33,16 @@ class ProductCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        $displayCategories = ArrayField::new('categories');
+        $displayCategories = ArrayField::new('categories')->setSortable(false);
         $formCategories = AssociationField::new('categories')->onlyOnForms();
         $createProduct = Field::new('pictureFile')->setFormType(VichImageType::class)->onlyOnForms()->setRequired(true);
         $editProduct =  Field::new('pictureFile')->setFormType(VichImageType::class)->onlyOnForms();
 
         $fields = [
-            Field::new('name'),
-            Field::new('price'),
-            Field::new('description'),
-            Field::new('quantity'),
+            Field::new('name')->setRequired(false),
+            Field::new('price')->setRequired(false),
+            Field::new('description')->setRequired(false),
+            Field::new('quantity')->setRequired(false),
             BooleanField::new('product_active'),
             BooleanField::new('onDiscount'),
             Field::new('discountPercentage'),
