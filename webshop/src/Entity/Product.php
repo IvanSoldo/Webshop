@@ -127,7 +127,8 @@ class Product
     private $onDiscount;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="integer", nullable=false)
+     * @Assert\NotBlank()
      * @Assert\Range(
      *     min = 1,
      *     max = 60,

@@ -233,7 +233,6 @@ class OrderCrudController extends AbstractCrudController
             TextField::new('user.getEmail', 'Email')->hideOnForm(),
             TextField::new('user', 'Name')->onlyOnDetail(),
             TextField::new('getAddress', 'Address')->hideOnForm(),
-            DateTimeField::new('order_date')->hideOnForm(),
             ArrayField::new('orderProducts', 'Products')->onlyOnDetail()->setSortable(false),
             NumberField::new('totalSum', 'Subtotal')->hideOnForm()->formatValue(function ($value){
                 return $value = '$' . strval($value);

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Nov 01, 2020 at 01:05 PM
+-- Generation Time: Nov 05, 2020 at 03:34 PM
 -- Server version: 8.0.21-0ubuntu0.20.04.4
 -- PHP Version: 7.4.3
 
@@ -41,8 +41,9 @@ CREATE TABLE `address` (
 
 INSERT INTO `address` (`id`, `city`, `postal_code`, `address`) VALUES
 (21, 'Vinkovci', 32100, 'Vrtna 29'),
-(22, 'Vinkovci', 32100, 'Vinkovacka 1'),
-(102, 'Osijek', 31000, 'Vinkovacka 1');
+(116, 'Vinkovci', 32100, 'Centar 6'),
+(119, 'Osijek', 31000, 'Centar 6'),
+(120, 'Vinkovci', 32100, 'Centar 1');
 
 -- --------------------------------------------------------
 
@@ -60,9 +61,7 @@ CREATE TABLE `cart` (
 --
 
 INSERT INTO `cart` (`id`, `user_id`) VALUES
-(1, 25),
-(2, 26),
-(3, 27);
+(1, 25);
 
 -- --------------------------------------------------------
 
@@ -95,7 +94,10 @@ CREATE TABLE `category` (
 
 INSERT INTO `category` (`id`, `name`, `description`) VALUES
 (9, 'Garden', '<div>Our&nbsp;<strong>Garden&nbsp;</strong>collection.</div>'),
-(12, 'Living Room', '<div>Our Living Room collection.</div>');
+(13, 'Living Room', '<div>Our <strong>Living Room</strong> collection.</div>'),
+(15, 'Dining Room', '<div>Our&nbsp;<strong>Dining Room&nbsp;</strong>collection.</div>'),
+(16, 'Storage', '<div>Our&nbsp;<strong>Storage</strong>&nbsp;collection</div>'),
+(17, 'Bedroom', '<div>Our&nbsp;<strong>Bedroom&nbsp;</strong>collection.</div>');
 
 -- --------------------------------------------------------
 
@@ -146,7 +148,14 @@ INSERT INTO `doctrine_migration_versions` (`version`, `executed_at`, `execution_
 ('DoctrineMigrations\\Version20201030125450', '2020-10-30 13:55:38', 292),
 ('DoctrineMigrations\\Version20201030135516', '2020-10-30 14:55:29', 149),
 ('DoctrineMigrations\\Version20201031101106', '2020-10-31 11:11:12', 243),
-('DoctrineMigrations\\Version20201031101629', '2020-10-31 11:16:35', 140);
+('DoctrineMigrations\\Version20201031101629', '2020-10-31 11:16:35', 140),
+('DoctrineMigrations\\Version20201102092948', '2020-11-02 10:30:02', 151),
+('DoctrineMigrations\\Version20201102102238', '2020-11-02 11:22:44', 225),
+('DoctrineMigrations\\Version20201103093713', '2020-11-03 10:37:28', 212),
+('DoctrineMigrations\\Version20201103102054', '2020-11-03 11:20:59', 152),
+('DoctrineMigrations\\Version20201103111506', '2020-11-03 12:15:12', 538),
+('DoctrineMigrations\\Version20201104101215', '2020-11-04 11:12:26', 315),
+('DoctrineMigrations\\Version20201104102020', '2020-11-04 11:20:25', 144);
 
 -- --------------------------------------------------------
 
@@ -196,9 +205,7 @@ INSERT INTO `order_status` (`id`, `name`, `is_predefined`) VALUES
 (8, 'Submitted', 1),
 (9, 'Completed', 1),
 (10, 'Canceled', 1),
-(11, 'Processing', 0),
-(12, 'On Hold', 0),
-(13, 'Pog', 0);
+(14, 'Delayed', 0);
 
 -- --------------------------------------------------------
 
@@ -216,8 +223,21 @@ CREATE TABLE `product` (
   `updated_at` datetime NOT NULL,
   `quantity` int NOT NULL,
   `on_discount` tinyint(1) NOT NULL,
-  `discount_percentage` int DEFAULT NULL
+  `discount_percentage` int DEFAULT NULL,
+  `created_at` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `product`
+--
+
+INSERT INTO `product` (`id`, `name`, `price`, `description`, `picture`, `product_active`, `updated_at`, `quantity`, `on_discount`, `discount_percentage`, `created_at`) VALUES
+(39, 'Brown Sofa', 100, 'Comfy brown sofa', '5fa3e729e6b9d430759976.jpg', 1, '2020-11-05 12:51:05', 4, 0, 1, '2020-11-05'),
+(40, 'Gray Sofa', 100, 'Comfy gray sofa', '5fa3e7827e213104898382.jpeg', 1, '2020-11-05 12:52:34', 4, 1, 15, '2020-11-05'),
+(41, 'Chair', 20, 'Sturdy wooden chair', '5fa3ec4e0fa20574410915.jpg', 1, '2020-11-05 13:13:02', 5, 0, 1, '2020-11-05'),
+(42, 'Bed', 60, 'Sturdy single bed', '5fa3ee0494e47351320695.jpeg', 1, '2020-11-05 13:20:20', 5, 0, 1, '2020-11-05'),
+(43, 'Table', 70, 'Sturdy oak table', '5fa3eefad8b13323750573.jpg', 1, '2020-11-05 13:24:26', 5, 0, 1, '2020-11-05'),
+(44, 'Wardrobe', 100, 'Sturdy oak wardrobe', '5fa3ef6104d97364727938.jpeg', 1, '2020-11-05 13:26:09', 5, 0, 1, '2020-11-05');
 
 -- --------------------------------------------------------
 
@@ -229,6 +249,61 @@ CREATE TABLE `product_category` (
   `product_id` int NOT NULL,
   `category_id` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `product_category`
+--
+
+INSERT INTO `product_category` (`product_id`, `category_id`) VALUES
+(39, 13),
+(40, 13),
+(41, 9),
+(41, 15),
+(42, 17),
+(43, 15),
+(44, 16),
+(44, 17);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `shop`
+--
+
+CREATE TABLE `shop` (
+  `id` int NOT NULL,
+  `address_id` int NOT NULL,
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `shop`
+--
+
+INSERT INTO `shop` (`id`, `address_id`, `email`) VALUES
+(3, 119, 'webshopOs@webshop.com'),
+(4, 120, 'webshopVk@webshop.com');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `store_settings`
+--
+
+CREATE TABLE `store_settings` (
+  `id` int NOT NULL,
+  `store_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `address_id` int NOT NULL,
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `new_products_date` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `store_settings`
+--
+
+INSERT INTO `store_settings` (`id`, `store_name`, `address_id`, `email`, `new_products_date`) VALUES
+(1, 'Webshop', 116, 'pero13@admin.com', '2020-11-04');
 
 -- --------------------------------------------------------
 
@@ -251,9 +326,7 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `email`, `roles`, `password`, `first_name`, `last_name`, `address_id`) VALUES
-(25, 'admin@admin.com', '[\"ROLE_ADMIN\"]', '$argon2id$v=19$m=65536,t=4,p=1$hHf/c3cTlkkhvuCOZQ+iXw$y1FVkKZf55S5dYolvrvM83yn7Eh4TjgBZgNzXnbYXCc', 'Ivan', 'Soldo', 21),
-(26, 'test@test.com', '[]', '$argon2id$v=19$m=65536,t=4,p=1$kzkxwP5ZBgHcKCStbZ0hTQ$jiu2/bsw3mSfhppybMAvvAAW9Fkw5YgzBunk5ELLhCw', 'Pero', 'Test', 22),
-(27, 'test@test.com2', '[]', '$argon2id$v=19$m=65536,t=4,p=1$b6Dfn61fPHRVFNIFQ4FnKA$3+ITyGykBa4SYdissiQmSljZhubkoGHzPSOdUL3SVQo', 'Pero', 'Test', 102);
+(25, 'admin@admin.com', '[\"ROLE_ADMIN\"]', '$argon2id$v=19$m=65536,t=4,p=1$fKh8+mf1bg5iEiwv/cxbTA$GhU1mN3PpGtP9ZidlKagVJcjz5s2Awnb2VKRSIs29p0', 'Ivan', 'Soldo', 21);
 
 --
 -- Indexes for dumped tables
@@ -330,6 +403,20 @@ ALTER TABLE `product_category`
   ADD KEY `IDX_CDFC735612469DE2` (`category_id`);
 
 --
+-- Indexes for table `shop`
+--
+ALTER TABLE `shop`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `UNIQ_AC6A4CA2F5B7AF75` (`address_id`);
+
+--
+-- Indexes for table `store_settings`
+--
+ALTER TABLE `store_settings`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `UNIQ_DB32DF3FF5B7AF75` (`address_id`);
+
+--
 -- Indexes for table `user`
 --
 ALTER TABLE `user`
@@ -345,55 +432,67 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `address`
 --
 ALTER TABLE `address`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=103;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=133;
 
 --
 -- AUTO_INCREMENT for table `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `cart_product`
 --
 ALTER TABLE `cart_product`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=124;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=154;
 
 --
 -- AUTO_INCREMENT for table `category`
 --
 ALTER TABLE `category`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `order`
 --
 ALTER TABLE `order`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=81;
 
 --
 -- AUTO_INCREMENT for table `order_product`
 --
 ALTER TABLE `order_product`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=69;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=93;
 
 --
 -- AUTO_INCREMENT for table `order_status`
 --
 ALTER TABLE `order_status`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `product`
 --
 ALTER TABLE `product`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
+
+--
+-- AUTO_INCREMENT for table `shop`
+--
+ALTER TABLE `shop`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `store_settings`
+--
+ALTER TABLE `store_settings`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- Constraints for dumped tables
@@ -433,6 +532,18 @@ ALTER TABLE `order_product`
 ALTER TABLE `product_category`
   ADD CONSTRAINT `FK_CDFC735612469DE2` FOREIGN KEY (`category_id`) REFERENCES `category` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `FK_CDFC73564584665A` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `shop`
+--
+ALTER TABLE `shop`
+  ADD CONSTRAINT `FK_AC6A4CA2F5B7AF75` FOREIGN KEY (`address_id`) REFERENCES `address` (`id`);
+
+--
+-- Constraints for table `store_settings`
+--
+ALTER TABLE `store_settings`
+  ADD CONSTRAINT `FK_DB32DF3FF5B7AF75` FOREIGN KEY (`address_id`) REFERENCES `address` (`id`);
 
 --
 -- Constraints for table `user`

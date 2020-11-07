@@ -50,7 +50,7 @@ class ProductRepository extends ServiceEntityRepository
             ->createQuery(
                 'SELECT e
                 FROM App:Product e
-                WHERE e.name LIKE :str'
+                WHERE e.name LIKE :str AND e.product_active = 1'
             )
             ->setParameter('str', '%'.$str.'%')
             ->getResult();
